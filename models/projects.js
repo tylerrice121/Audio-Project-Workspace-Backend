@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 //-----------------------------------
 
-const projectSchema = Schema({
+const projectsSchema = Schema({
     title: String,
     img: String,
     songs: [{
         type: Schema.Types.ObjectId,
-        ref: 'Song'
+        ref: 'Songs'
     }],
 }, { timestamps: true });
 
-module.exports = mongoose.model('Project', projectSchema)
+module.exports = mongoose.model('Projects', projectsSchema)
