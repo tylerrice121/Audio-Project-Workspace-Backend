@@ -52,14 +52,23 @@ projectsRouter.post('/', async (req, res) => {
 //-------------------------------------------
 //show
 
-projectsRouter.get('/:id', async (req, res) => {
-    console.log(req.params.id)
+projectsRouter.get('/:songid', async (req, res) => {
+    console.log(req.body)
+    // req.params.id = Projects.song
     try {
-        res.json(await Projects.findById(req.params.id))
+        res.json(await Projects.findById(req.params.songid))
     } catch (error) {
         res.json(error)
     }
-})
+});
+// projectsRouter.get('/:id', async (req, res) => {
+//     console.log(req.params.id)
+//     try {
+//         res.json(await Projects.findById(req.params.id))
+//     } catch (error) {
+//         res.json(error)
+//     }
+// });
 
 
 module.exports = projectsRouter;
