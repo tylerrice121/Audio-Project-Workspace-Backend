@@ -12,9 +12,9 @@ const Songs = require('../models/songs');
 //index
 projectsRouter.get('/', async (req, res) => {
     try {
-        res.json(await Projects.find({}));    
+        res.json(await Projects.find({managedBy: req.user.uid}));    
     } catch (error) {
-        res.json(error)
+        res.json({message: 'Please login'})
     };
 });
 
@@ -45,7 +45,7 @@ projectsRouter.post('/', async (req, res) => {
     try {
         res.create(await Projects.create(req.body))
     } catch (error) {
-        res.json(error)
+        res.json({message: 'Please login'})
     };
 });
 
@@ -57,7 +57,7 @@ projectsRouter.get('/:id', async (req, res) => {
     try {
         res.json(await Projects.findById(req.params.id))
     } catch (error) {
-        res.json(error)
+        res.json({message: 'Please login'})
     }
 });
 
