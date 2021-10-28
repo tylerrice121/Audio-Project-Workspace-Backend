@@ -35,10 +35,14 @@ admin.initializeApp({
 });
 
 app.use(async function(req, res, next) {
-    const token = req.get('Authorization');
-    const authUser = await admin.auth().verifyIdToken(token.replace('Bearer ', ''));
-    req.user = authUser;
-    next();
+    try {
+        const token = req.get('Authorization');
+        const authUser = await admin.auth().verifyIdToken(token.replace('Bearer ', ''));
+        req.user = authUser;
+        next();
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 // router auth middleware
@@ -52,7 +56,7 @@ function isAuthenticated(req, res, next) {
 //===========================================
 
 app.use('/api/projects', isAuthenticated, projectsController);
-app.use('/api/songs', isAuthenticated, songsController);
+app.use('/api/songs', songsController);
 
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
