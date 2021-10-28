@@ -6,10 +6,10 @@ const ObjectId = Schema.Types.ObjectId;
 const projectsSchema = Schema({
     title: String,
     img: String,
-    // songs: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Songs'
-    // }],
+    songs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Songs'
+    }],
     managedBy: String
 }, { timestamps: true });
 
