@@ -5,10 +5,6 @@ const songsSchema = Schema({
     song: {
         title: String,
         audio: String,
-        project: {
-            type: Schema.Types.ObjectId,
-            ref: 'Projects'  
-        },
         list: [{
            item: String,
            sublist: Array,
