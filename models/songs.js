@@ -7,7 +7,7 @@ const songsSchema = Schema({
         audio: String,
         project: {
             type: Schema.Types.ObjectId,
-            ref: 'Songs'  
+            ref: 'Projects'  
         },
         list: [{
            item: String,
