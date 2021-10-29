@@ -52,11 +52,12 @@ projectsRouter.post('/', async (req, res) => {
 
 projectsRouter.post('/:id/songs', async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id);
+        const project = await Projects.findById(req.params.id);
         project.songs.push(req.body);
         await project.save();
         res.json(project);
     } catch (error) {
+        console.log(error)
         res.json({message: 'Something went wrong'})
     }
 })

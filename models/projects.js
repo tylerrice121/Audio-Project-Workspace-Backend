@@ -5,15 +5,17 @@ const Schema = mongoose.Schema;
 //-----------------------------------
 
 const songsSchema = Schema({
-    song: {
-        title: String,
-        createdBy: String,
-        audio: String,
-        list: [{
-           item: String,
-           sublist: Array,
-        }]
-    }
+    title: String,
+    audio: String
+    // song: {
+    //     title: String,
+    //     createdBy: String,
+    //     audio: String,
+    //     list: [{
+    //        item: String,
+    //        sublist: Array,
+    //     }]
+    // }
 });
 
 const projectsSchema = Schema({
@@ -23,4 +25,5 @@ const projectsSchema = Schema({
     managedBy: String
 }, { timestamps: true });
 
+module.exports = mongoose.model('Songs', songsSchema)
 module.exports = mongoose.model('Projects', projectsSchema)
