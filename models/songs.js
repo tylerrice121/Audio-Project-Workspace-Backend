@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const songsSchema = Schema({
     song: {
         title: String,
+        createdBy: String,
         audio: String,
         list: [{
            item: String,

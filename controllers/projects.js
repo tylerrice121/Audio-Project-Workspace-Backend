@@ -1,4 +1,5 @@
 const express = require('express');
+const projects = require('../models/projects');
 const { findById } = require('../models/projects');
 const projectsRouter = express.Router();
 const Projects = require('../models/projects');
@@ -49,6 +50,17 @@ projectsRouter.post('/', async (req, res) => {
     };
 });
 
+projectsRouter.post('/:id/songs', async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        project.songs.push(req.body);
+        await project.save();
+        res.json(project);
+    } catch (error) {
+        res.json({message: 'Something went wrong'})
+    }
+})
+
 //-------------------------------------------
 //show
 
@@ -60,6 +72,8 @@ projectsRouter.get('/:id', async (req, res) => {
         res.json({message: 'Please login'})
     }
 });
+
+//===========================================
 
 
 module.exports = projectsRouter;

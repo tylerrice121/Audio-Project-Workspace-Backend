@@ -1,6 +1,6 @@
 const express = require('express');
 const songsRouter = express.Router();
-const Songs = require('../models/songs');
+const Projects = require('../models/projects');
 
 //===========================================
 //               ROUTES

@@ -8,7 +8,7 @@ require('dotenv').config();
 const app = express();
 const { PORT, DATABASE_URL, PRIVATE_KEY_ID, PRIVATE_KEY, CLIENT_ID } = process.env;
 const projectsController = require('./controllers/projects');
-const songsController = require('./controllers/songs');
+// const songsController = require('./controllers/songs');
 const admin = require("firebase-admin");
 
 // connect to mongodb
@@ -28,7 +28,7 @@ mongoose.connection.on('error', () => console.log(`${error} mongodb`));
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/songs', songsController);
+// app.use('/api/songs', songsController);
 
 admin.initializeApp({
   credential: admin.credential.cert({
