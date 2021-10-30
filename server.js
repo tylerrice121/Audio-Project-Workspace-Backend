@@ -7,8 +7,10 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 const { PORT, DATABASE_URL, PRIVATE_KEY_ID, PRIVATE_KEY, CLIENT_ID } = process.env;
-const projectsController = require('./controllers/projects');
-// const songsController = require('./controllers/songs');
+const projectsRouter = express.Router();
+const songsRouter = express.Router({mergeParams: true});
+const Projects = require('./models/projects');
+const Songs = require('./models/projects');
 const admin = require("firebase-admin");
 
 // connect to mongodb
@@ -28,7 +30,6 @@ mongoose.connection.on('error', () => console.log(`${error} mongodb`));
 app.use(cors());
 app.use(express.json());
 
-// app.use('/api/songs', songsController);
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -68,13 +69,98 @@ function isAuthenticated(req, res, next) {
 //===========================================
 //               ROUTES
 //===========================================
+app.use('/api/projects', isAuthenticated, projectsRouter);
+projectsRouter.use('/:id/songs', isAuthenticated, songsRouter)
 
-app.use('/api/projects', isAuthenticated, projectsController);
-// app.use('/api/songs', songsController);
+
 
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
 
+//-------------------------------------------
+//index
+
+projectsRouter.get('/', async (req, res) => {
+    try {
+        res.json(await Projects.find({managedBy: req.user.uid}));    
+    } catch (error) {
+        res.json({message: 'Please login'})
+    };
+});
+
+//-------------------------------------------
+//delete
+projectsRouter.delete('/:id', async (req, res) => {
+    try {
+        res.json(await Projects.findByIdAndDelete(req.params.id))
+    } catch (error) {
+        res.json(error)
+    }
+});
+
+//-------------------------------------------
+//update 
+projectsRouter.put('/:id', async (req, res) => {
+    try {
+        res.json(await Projects.findByIdAndUpdate(req.params.id, req.body, {new: true}))
+    } catch (error) {
+        res.json(error)
+    }
+})
+
+//-------------------------------------------
+//create
+
+projectsRouter.post('/', async (req, res) => {
+    try {
+        res.create(await Projects.create(req.body))
+    } catch (error) {
+        res.json({message: 'Please login'})
+    };
+});
+
+projectsRouter.post('/:id/songs', async (req, res) => {
+    try {
+        const project = await Projects.findById(req.params.id);
+        project.songs.push(req.body);
+        await project.save();
+        res.json(project);
+    } catch (error) {
+        console.log(error)
+        res.json({message: 'Something went wrong'})
+    }
+})
+
+//-------------------------------------------
+//show
+
+projectsRouter.get('/:id', async (req, res) => {
+    try {
+        res.json(await Projects.findById(req.params.id))
+    } catch (error) {
+        res.json({message: 'Please login'})
+    }
+});
+
+//===========================================
+//SONGS
+
+songsRouter.get('/', async (req, res) => {
+    try {
+        res.json(`${req.params.id}`)
+    } catch (error) {
+        res.json(error)
+    }
+})
+songsRouter.get('/:songid', async (req, res) => {
+    try {
+        res.json(await Projects.findById(req.params.id, req.params.songid, req.body))
+    } catch (error) {
+        console.log(error)
+        res.json(error)
+    }
+    console.log(req.body)
+})
 
 //===========================================
 //               LISTENERS
