@@ -8,6 +8,7 @@ require('dotenv').config();
 const app = express();
 const { PORT, DATABASE_URL, PRIVATE_KEY_ID, PRIVATE_KEY, CLIENT_ID } = process.env;
 const projectsRouter = express.Router();
+const morgan = require('morgan');
 const songsRouter = express.Router({mergeParams: true});
 const Projects = require('./models/projects');
 const Songs = require('./models/projects');
@@ -29,6 +30,7 @@ mongoose.connection.on('error', () => console.log(`${error} mongodb`));
 //===========================================
 app.use(cors());
 app.use(express.json());
+// app.use(morgan('tiny'))
 
 
 admin.initializeApp({
@@ -152,7 +154,7 @@ songsRouter.get('/', async (req, res) => {
         res.json(error)
     }
 })
-songsRouter.get('/:songid', async (req, res) => {
+projectsRouter.get('/:songid', async (req, res) => {
     try {
         res.json(await Projects.findById(req.params.id, req.params.songid, req.body))
     } catch (error) {
