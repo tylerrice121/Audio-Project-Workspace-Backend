@@ -6,16 +6,12 @@ const Schema = mongoose.Schema;
 
 const songsSchema = Schema({
     title: String,
-    audio: String
-    // song: {
-    //     title: String,
-    //     createdBy: String,
-    //     audio: String,
-    //     list: [{
-    //        item: String,
-    //        sublist: Array,
-    //     }]
-    // }
+    createdBy: String,
+    audio: String,
+    list: [{
+        item: String,
+        sublist: Array,
+    }]
 });
 
 const projectsSchema = Schema({
