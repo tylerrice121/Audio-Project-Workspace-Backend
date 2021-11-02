@@ -107,28 +107,20 @@ projectsRouter.delete('/:id', async (req, res) => {
 });
 
 //-------------------------------------------
-//update 
-// projectsRouter.put('/:id', async (req, res) => {
-//     try {
-//         // await project.save()
-//         res.json(await Projects.findByIdAndUpdate(req.params.id, req.body, {new: true}))
-//     } catch (error) {
-//         res.json(error)
-//     }
-// })
+
 projectsRouter.put('/:id/songs/:songid', async (req, res) => {
     try {
         const project = await Projects.findById(req.params.id);
         const songId = req.params.songid
 
         const song = await project.songs[songId].list.push(req.body);
-
-        console.log(song)
+        console.log(project.songs[songId])
 
         await project.save()
         res.json(await Projects.findByIdAndUpdate(req.params.id, req.body, {new: true}))
         
     } catch (error) {
+        console.log(project.songs[songId])
         console.log(error)
         res.json(error)
     }

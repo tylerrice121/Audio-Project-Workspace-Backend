@@ -10,6 +10,10 @@ const songsSchema = Schema({
     audio: String,
     list: [{
         item: String,
+        completed: {
+            type: Boolean,
+            default: false
+        },
         sublist: Array,
     }]
 });
