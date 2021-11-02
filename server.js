@@ -106,16 +106,28 @@ projectsRouter.delete('/:id', async (req, res) => {
     }
 });
 
+// DELETE LIST ITEMS
+// projectsRouter.delete('/:id/songs/:songid', async (req, res) => {
+//     try {
+//         const project = await Projects.findById(req.params.id);
+//         console.log(project)
+//         // const songId = req.params.songid
+//         // const song = await project.songs[songId].list.push(req.body);
+//     } catch (error) {
+//         res.json(error)
+//     }
+// });
+
 //-------------------------------------------
+
 
 projectsRouter.put('/:id/songs/:songid', async (req, res) => {
     try {
         const project = await Projects.findById(req.params.id);
         const songId = req.params.songid
-
         const song = await project.songs[songId].list.push(req.body);
-        console.log(project.songs[songId])
-
+        console.log(req.body)
+        
         await project.save()
         res.json(await Projects.findByIdAndUpdate(req.params.id, req.body, {new: true}))
         
@@ -126,6 +138,16 @@ projectsRouter.put('/:id/songs/:songid', async (req, res) => {
     }
 })
 
+projectsRouter.put('/:id', async (req, res) => {
+    try {
+        res.json(await Projects.findByIdAndUpdate(req.params.id, req.body, {new: true}))
+        
+    } catch (error) {
+        console.log(req.body.songs[0].list)
+        console.log(error)
+        res.json(error)
+    }
+})
 
 
 //-------------------------------------------
@@ -162,32 +184,6 @@ projectsRouter.get('/:id', async (req, res) => {
         res.json({message: 'Please login'})
     }
 });
-
-//===========================================
-//SONGS
-
-// songsRouter.get('/', async (req, res) => {
-//     try {
-//         res.json(`${req.params.id}`)
-//     } catch (error) {
-//         res.json(error)
-//     }
-// })
-
-// songsRouter.get('/:id/songs/songid', async (req, res) => {
-//     console.log('heyhey')
-//     try {
-//         const id = req.params.id;
-//         const songId = req.params.songid;
-//         const project = await Projects.findById(req.params.id);
-//         const song = project.songs.find(s => s._id === songId);
-//         res.json(song);
-//     } catch (error) {
-//         console.log(error)
-//         res.json({message: 'Something went wrong'})
-//     }
-// })
-
 
 //===========================================
 //               LISTENERS

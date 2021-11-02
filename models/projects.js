@@ -14,7 +14,6 @@ const songsSchema = Schema({
             type: Boolean,
             default: false
         },
-        sublist: Array,
     }]
 });
 
