@@ -32,48 +32,45 @@ app.use(express.json());
 app.use(morgan('dev'))
 
 
-// admin.initializeApp({
-//   credential: admin.credential.cert({
-//     "type": "service_account",
-//     "project_id": "apw-auth",
-//     "private_key_id": PRIVATE_KEY_ID,
-//     "private_key": PRIVATE_KEY.replace(/\\n/g, '\n'),
-//     "client_email": "firebase-adminsdk-hjk2m@apw-auth.iam.gserviceaccount.com",
-//     "client_id": CLIENT_ID,
-//     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-//     "token_uri": "https://oauth2.googleapis.com/token",
-//     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-//     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hjk2m%40apw-auth.iam.gserviceaccount.com"
-//   })
-// });
+admin.initializeApp({
+  credential: admin.credential.cert({
+    "type": "service_account",
+    "project_id": "apw-auth",
+    "private_key_id": PRIVATE_KEY_ID,
+    "private_key": PRIVATE_KEY.replace(/\\n/g, '\n'),
+    "client_email": "firebase-adminsdk-hjk2m@apw-auth.iam.gserviceaccount.com",
+    "client_id": CLIENT_ID,
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hjk2m%40apw-auth.iam.gserviceaccount.com"
+  })
+});
 
-// app.use(async function(req, res, next) {
-//     try {
-//         const token = req.get('Authorization');
-//         if(token) {
-//             const authUser = await admin.auth().verifyIdToken(token.replace('Bearer ', ''));
-//             req.user = authUser;
-//         }
+app.use(async function(req, res, next) {
+    try {
+        const token = req.get('Authorization');
+        if(token) {
+            const authUser = await admin.auth().verifyIdToken(token.replace('Bearer ', ''));
+            req.user = authUser;
+        }
 
-//         next();
-//     } catch (error) {
-//         console.log(error)
-//     }
-// });
+        next();
+    } catch (error) {
+        console.log(error)
+    }
+});
 
-// // router auth middleware
-// function isAuthenticated(req, res, next) {
-//     if(req.user) return next();
-//     else res.status(401).json({message: 'unauthorized'});
-// };
+// router auth middleware
+function isAuthenticated(req, res, next) {
+    if(req.user) return next();
+    else res.status(401).json({message: 'unauthorized'});
+};
 
 //===========================================
 //               ROUTES
 //===========================================
-app.use('/api/projects', projectsRouter);
-projectsRouter.use('/:id/songs', songsRouter)
-
-
+app.use('/api/projects', isAuthenticated, projectsRouter);
 
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
 app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was not found'}));
@@ -81,16 +78,9 @@ app.get('/api/*', (req, res) => res.status(404).json({message: 'That route was n
 //-------------------------------------------
 //index
 
-// projectsRouter.get('/', async (req, res) => {
-//     try {
-//         res.json(await Projects.find({managedBy: req.user.uid}));    
-//     } catch (error) {
-//         res.json({message: 'Please login'})
-//     };
-// });
 projectsRouter.get('/', async (req, res) => {
     try {
-        res.json(await Projects.find({}));    
+        res.json(await Projects.find({managedBy: req.user.uid}));    
     } catch (error) {
         res.json({message: 'Please login'})
     };
@@ -105,18 +95,6 @@ projectsRouter.delete('/:id', async (req, res) => {
         res.json(error)
     }
 });
-
-// DELETE LIST ITEMS
-// projectsRouter.delete('/:id/songs/:songid', async (req, res) => {
-//     try {
-//         const project = await Projects.findById(req.params.id);
-//         console.log(project)
-//         // const songId = req.params.songid
-//         // const song = await project.songs[songId].list.push(req.body);
-//     } catch (error) {
-//         res.json(error)
-//     }
-// });
 
 //-------------------------------------------
 
