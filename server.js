@@ -9,7 +9,6 @@ const app = express();
 const { PORT, DATABASE_URL, PRIVATE_KEY_ID, PRIVATE_KEY, CLIENT_ID } = process.env;
 const projectsRouter = express.Router();
 const morgan = require('morgan');
-const songsRouter = express.Router({mergeParams: true});
 const Projects = require('./models/projects');
 const admin = require("firebase-admin");
 

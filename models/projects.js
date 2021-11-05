@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const ObjectId = Schema.Types.ObjectId;
 
 //-----------------------------------
 
@@ -10,6 +9,7 @@ const songsSchema = Schema({
     audio: String,
     list: [{
         item: String,
+        uniqueId: Number,
         completed: {
             type: Boolean,
             default: false
